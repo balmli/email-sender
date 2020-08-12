@@ -2,309 +2,145 @@
 const Homey = require('homey');
 let nodemailer = require('nodemailer');
 
-let mail_user, mail_pass, mail_host, mail_port, mail_from, mail_secure, use_credentials;
-
 class EmailApp extends Homey.App {
-	
-	onInit() {
-	
-		//mail settings (if any)
-		use_credentials = Homey.ManagerSettings.get('use_credentials');
-	
-		//backwards compatibility
-		if (typeof use_credentials == undefined || typeof use_credentials == 'undefined') {
-			use_credentials = true;
-			Homey.manager('settings').set( 'use_credentials', true);
-		}
-	
-		mail_user = Homey.ManagerSettings.get('mail_user');
-		mail_pass = Homey.ManagerSettings.get('mail_password');
-		mail_host = Homey.ManagerSettings.get('mail_host');
-		mail_port = Homey.ManagerSettings.get('mail_port');
-		mail_from = Homey.ManagerSettings.get('mail_from');
-		mail_secure = Homey.ManagerSettings.get('mail_secure');
-	
-		this.log('Backend settings updated');
-		
-		let sendMessage = new Homey.FlowCardAction('sendmail');
-		sendMessage
-		    .register()
-		    .registerRunListener(( args, state ) => {
-		
-				if ( typeof mail_user !== 'undefined' && typeof mail_pass !== 'undefined' && typeof mail_host !== 'undefined' && typeof mail_port !== 'undefined' && typeof mail_from !== 'undefined') {
 
-					if (typeof use_credentials == undefined) use_credentials = true;
-		
-					if (use_credentials) {
-						var transporter = nodemailer.createTransport(
-						{
-							host: mail_host,
-							port: mail_port,
-							secure: mail_secure,
-							auth: {
-								user: mail_user,
-								pass: mail_pass
-							},
-							tls: {rejectUnauthorized: false}
-						});
-					} else {
-						// Don't use authentication. Not supported by all providers
-						var transporter = nodemailer.createTransport(
-						{
-							host: mail_host,
-							port: mail_port,
-							secure: mail_secure,
-							tls: {rejectUnauthorized: false}
-						});
-					}
-		
-				    var mailOptions = {
-		
-						from: 'Homey <' + mail_from + '>',
-					    to: args.mailto,
-					    subject: args.subject,
-					    text: args.body,
-						  html: args.body
-				    }
-		
-				    transporter.sendMail(mailOptions, function(error, info){
-					    if(error){
-						    //return this.error(error);
-						    console.log ("Error: " + error);
-						    return Promise.resolve (false);
-						    
-					    }
-					    console.log('Message sent: ' + info.response);
-					    return Promise.resolve (true);
-					    
-					});
-		
-				} else {
-		
-					this.log('Not all required variables for mailing have been set');
-		
-					return callback ('Not all required variables for mailing have been set', false);
-		
-				}
-				
-		    })
-	        
-	        
-	    let sendascii = new Homey.FlowCardAction('sendascii');
-		sendascii
-		    .register()
-		    .registerRunListener(( args, state ) => {
-		
-				if ( typeof mail_user !== 'undefined' && typeof mail_pass !== 'undefined' && typeof mail_host !== 'undefined' && typeof mail_port !== 'undefined' && typeof mail_from !== 'undefined') {
+    async onInit() {
+        try {
+            await this.initSettings();
+            await this.initFlows();
+        } catch (err) {
+            this.log('onInit error', err);
+        }
+    }
 
-					if (typeof use_credentials == undefined) use_credentials = true;
-		
-					if (use_credentials) {
-						var transporter = nodemailer.createTransport(
-						{
-							host: mail_host,
-							port: mail_port,
-							secure: mail_secure,
-							auth: {
-								user: mail_user,
-								pass: mail_pass
-							},
-							tls: {rejectUnauthorized: false}
-						});
-					} else {
-						// Don't use authentication. Not supported by all providers
-						var transporter = nodemailer.createTransport(
-						{
-							host: mail_host,
-							port: mail_port,
-							secure: mail_secure,
-							tls: {rejectUnauthorized: false}
-						});
-					}
-		
-				    var mailOptions = {
-		
-						from: 'Homey <' + mail_from + '>',
-					    to: args.mailto,
-					    subject: args.subject,
-					    text: args.body
-				    }
-		
-				    transporter.sendMail(mailOptions, function(error, info){
-					    if(error){
-						    
-						    console.log(error);
-						    
-						    return Promise.resolve (false);
-					    }
-					    console.log('Message sent: ' + info.response);
-					    return Promise.resolve (true);
-					    
-					});
-		
-				} else {
-		
-					this.log('Not all required variables for mailing have been set');
-		
-					callback ('Not all required variables for mailing have been set', false);
-		
-				}
-				
-		    })
-	        
-	    let sendimage = new Homey.FlowCardAction('sendimage');
-		sendimage
-		    .register()
-		    .registerRunListener(( args, state ) => {
-		
-				if ( typeof mail_user !== 'undefined' && typeof mail_pass !== 'undefined' && typeof mail_host !== 'undefined' && typeof mail_port !== 'undefined' && typeof mail_from !== 'undefined') {
+    async initSettings() {
+    }
 
-					if (typeof use_credentials == undefined) use_credentials = true;
-		
-					if (use_credentials) {
-						var transporter = nodemailer.createTransport(
-						{
-							host: mail_host,
-							port: mail_port,
-							secure: mail_secure,
-							auth: {
-								user: mail_user,
-								pass: mail_pass
-							},
-							tls: {rejectUnauthorized: false}
-						});
-					} else {
-						// Don't use authentication. Not supported by all providers
-						var transporter = nodemailer.createTransport(
-						{
-							host: mail_host,
-							port: mail_port,
-							secure: mail_secure,
-							tls: {rejectUnauthorized: false}
-						});
-					}
-					
-					let image = args.droptoken;
-					
-					if (image.getStream) {
-						
-						//image.getStream()
-						//.then( buf => {
-							
-							
-							//const stream = await image.getStream();
-					
-							if (image.contentType == "jpg") {
-								
-								var filename = "x.jpg";
-							
-							} else if (image.contentType == "gif") {
-								
-								var filename = "x.gif";
-								
-							} else if (image.contentType == "png") {
-								
-								var filename = "x.png";
-								
-							}
-							
-						    var mailOptions = {
-		
-								from: 'Homey <' + mail_from + '>',
-							    to: args.mailto,
-							    subject: args.subject,
-							    //text: body,
-								//html: body
-								attachments:[{
-								 filename: image.filename,
-								 content: image.contentType
-								}]
-						    }
-				
-						    transporter.sendMail(mailOptions, function(error, info){
-							    if(error){
-								    
-								    console.log(error);
-							    
-									return Promise.resolve (false);
-							    
-							    }
-							    console.log('Message sent: ' + info.response);
-							    return Promise.resolve (true);
-							    
-							});
-						
-						/*
-						})
-						.catch ( err => {
-							console.error (err);	
-						});
-						*/
-						
-					} else {
-						//Pre Homey 2.2.0
-					
-						image.getBuffer()
-						.then( buf => {
-							
-							if (image.getFormat() == "jpg") {
-								
-								var filename = "x.jpg";
-							
-							} else if (image.getFormat() == "gif") {
-								
-								var filename = "x.gif";
-								
-							} else if (image.getFormat() == "png") {
-								
-								var filename = "x.png";
-								
-							}
-							
-						    var mailOptions = {
-		
-								from: 'Homey <' + mail_from + '>',
-							    to: args.mailto,
-							    subject: args.subject,
-							    //text: body,
-								//html: body
-								attachments:[{
-								 filename: filename,
-								 content: buf
-								}]
-						    }
-				
-						    transporter.sendMail(mailOptions, function(error, info){
-							    if(error){
-								    
-								    console.log(error);
-							    
-									return Promise.resolve (false);
-							    
-							    }
-							    console.log('Message sent: ' + info.response);
-							    return Promise.resolve (true);
-							    
-							});
-							
-						})
-						.catch ( err => {
-							console.error (err);	
-						});
-						
-					}
-							
-				} else {
-		
-					this.log('Not all required variables for mailing have been set');
-		
-					callback ('Not all required variables for mailing have been set', false);
-		
-				}
-				
-		    })
-	        
-	}
+    async initFlows() {
+        new Homey.FlowCardAction('sendmail')
+            .register()
+            .registerRunListener(args => this.doSendEmail(args));
+
+        new Homey.FlowCardAction('sendascii')
+            .register()
+            .registerRunListener(args => this.doSendAsciiEmail(args));
+
+        new Homey.FlowCardAction('sendimage')
+            .register()
+            .registerRunListener(args => this.doSendImageEmail(args));
+    }
+
+    getEmailSettings() {
+        return {
+            mail_host: Homey.ManagerSettings.get('mail_host'),
+            mail_port: Homey.ManagerSettings.get('mail_port'),
+            mail_secure: Homey.ManagerSettings.get('mail_secure'),
+            use_credentials: Homey.ManagerSettings.get('use_credentials'),
+            mail_user: Homey.ManagerSettings.get('mail_user'),
+            mail_pass: Homey.ManagerSettings.get('mail_password'),
+            mail_from: Homey.ManagerSettings.get('mail_from')
+        }
+    }
+
+    createEmailTransporter(settings) {
+        let transporter = {
+            host: settings.mail_host,
+            port: settings.mail_port,
+            secure: settings.mail_secure,
+            tls: {
+                rejectUnauthorized: false
+            }
+        };
+        if (settings.use_credentials) {
+            transporter = {
+                ...transporter,
+                auth: {
+                    user: settings.mail_user,
+                    pass: settings.mail_pass
+                }
+            }
+        }
+        return nodemailer.createTransport(transporter);
+    }
+
+    createEmailAddress(to) {
+        return to.indexOf(';') >= 0 ? to.split(';') : to;
+    }
+
+    createMailOptions(settings, args, html = true, attachments) {
+        return {
+            from: 'Homey <' + settings.mail_from + '>',
+            to: this.createEmailAddress(args.mailto),
+            subject: args.subject,
+            text: args.body,
+            html: html ? args.body : undefined,
+            attachments: attachments
+        };
+    }
+
+    async doSendEmail(args) {
+        const settings = this.getEmailSettings();
+        return new Promise((resolve, reject) => {
+            const transporter = this.createEmailTransporter(settings);
+            const mailOptions = this.createMailOptions(settings, args);
+            this.log('doSendEmail', settings, mailOptions);
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    this.log('doSendEmail error', error);
+                    reject(error);
+                } else {
+                    this.log('Message sent: ' + info.response);
+                    resolve();
+                }
+            });
+        });
+    }
+
+    async doSendAsciiEmail(args) {
+        const settings = this.getEmailSettings();
+        return new Promise((resolve, reject) => {
+            const transporter = this.createEmailTransporter(settings);
+            const mailOptions = this.createMailOptions(settings, args, false);
+            this.log('doSendAsciiEmail', settings, mailOptions);
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    this.log('doSendAsciiEmail error', error);
+                    reject(error);
+                } else {
+                    this.log('Message sent: ' + info.response);
+                    resolve();
+                }
+            });
+        });
+    }
+
+    async doSendImageEmail(args) {
+        const settings = this.getEmailSettings();
+        const imageStream = await args.droptoken.getStream();
+        this.log('doSendImageEmail: image', imageStream.contentType, 'to: ', imageStream.filename, imageStream);
+
+        return new Promise((resolve, reject) => {
+
+            const attachments = [{
+                filename: imageStream.filename,
+                content: imageStream,
+                contentType: imageStream.contentType
+            }];
+
+            const transporter = this.createEmailTransporter(settings);
+            const mailOptions = this.createMailOptions(settings, args, false, attachments);
+            this.log('doSendImageEmail', settings, mailOptions);
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    this.log('doSendImageEmail error', error);
+                    reject(error);
+                } else {
+                    this.log('Message sent: ' + info.response);
+                    resolve();
+                }
+            });
+        });
+    }
 
 }
 

@@ -1,12 +1,12 @@
 {
-    "id": "email.sender",
+    "id": "email.sender2",
     "name": {
         "en": "Email sender",
         "nl": "Email versturen"
     },
     "sdk": 2,
-    "version": "0.2.4",
-    "compatibility": ">=1.5.0",
+    "version": "0.3.1",
+    "compatibility": ">=3.0.0",
     "author": {
         "name": "Chamid Media",
         "email": "info@chamidmedia.nl"
@@ -21,8 +21,12 @@
 				"name": "Geurt Dijker",
 				"email": "Homey.Apps@dijker.nu",
 				"website": "http://www.dijker.nu"
-			}
-	    ]
+			},
+          {
+            "name": "Bjørnar Almli",
+            "email": "bjornar.almli@gmail.com"
+          }
+        ]
     },
     "contributing": {
 	    "donate": {
