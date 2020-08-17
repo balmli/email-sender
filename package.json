@@ -1,6 +1,6 @@
 {
   "name": "email.sender",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "main": "app.js",
   "dependencies": {
     "nodemailer": "^6.4.11"

@@ -1,147 +1,178 @@
 {
-    "id": "email.sender2",
-    "name": {
-        "en": "Email sender",
-        "nl": "Email versturen"
-    },
-    "sdk": 2,
-    "version": "0.3.1",
-    "compatibility": ">=3.0.0",
-    "author": {
-        "name": "Chamid Media",
-        "email": "info@chamidmedia.nl"
-    },
-    "contributors": {
-	    "developers": [
-		    {
-			    "name": "Inversion-NL",
-				"email": "inversion-nl@gmail.com"
-			},
-			{
-				"name": "Geurt Dijker",
-				"email": "Homey.Apps@dijker.nu",
-				"website": "http://www.dijker.nu"
-			},
+  "id": "email.sender2",
+  "name": {
+    "en": "Email sender",
+    "nl": "Email versturen"
+  },
+  "sdk": 2,
+  "version": "0.3.2",
+  "compatibility": ">=3.0.0",
+  "author": {
+    "name": "Chamid Media",
+    "email": "info@chamidmedia.nl"
+  },
+  "contributors": {
+    "developers": [
+      {
+        "name": "Inversion-NL",
+        "email": "inversion-nl@gmail.com"
+      },
+      {
+        "name": "Geurt Dijker",
+        "email": "Homey.Apps@dijker.nu",
+        "website": "http://www.dijker.nu"
+      },
+      {
+        "name": "Bjørnar Almli",
+        "email": "bjornar.almli@gmail.com"
+      }
+    ]
+  },
+  "contributing": {
+    "donate": {
+      "paypal": {
+        "email": "info@chamidmedia.nl",
+        "currency": "EUR"
+      }
+    }
+  },
+  "images": {
+    "large": "./assets/images/large.jpg",
+    "small": "./assets/images/small.jpg"
+  },
+  "category": "internet",
+  "description": {
+    "en": "Send email using Homey",
+    "nl": "Verstuur e-mail met Homey"
+  },
+  "dependencies": {
+    "net": "*"
+  },
+  "flow": {
+    "actions": [
+      {
+        "id": "sendmail",
+        "title": {
+          "en": "Send a mail",
+          "nl": "Stuur een e-mail"
+        },
+        "args": [
           {
-            "name": "Bjørnar Almli",
-            "email": "bjornar.almli@gmail.com"
+            "name": "mailto",
+            "type": "text",
+            "placeholder": {
+              "en": "Mail to",
+              "nl": "Mail aan"
+            }
+          },
+          {
+            "name": "subject",
+            "type": "text",
+            "placeholder": {
+              "en": "Subject",
+              "nl": "Onderwerp"
+            }
+          },
+          {
+            "name": "body",
+            "type": "text",
+            "placeholder": {
+              "en": "Content",
+              "nl": "Inhoud"
+            }
           }
         ]
-    },
-    "contributing": {
-	    "donate": {
-	        "paypal": {
-	            "email": "info@chamidmedia.nl",
-	            "currency": "EUR"
-	        }
-	    }
-	},
-    "images": {
-      "large": "./assets/images/large.jpg",
-      "small": "./assets/images/small.jpg"
-    },
-    "category": "internet",
-    "description": {
-    	"en": "Send email using Homey",
-        "nl": "Verstuur e-mail met Homey"
-    },
-    "dependencies": {
-    		"net": "*"
-    },
-     "flow": {
-        "actions": [
-        {
-            "id": "sendmail",
-            "title": {
-                "en": "Send a mail",
-                "nl": "Stuur een e-mail"
-            },
-            "args": [
-	              {
-		              "name": "mailto",
-		              "type": "text",
-		              "placeholder": {
-			              "en": "Mail to",
-			              "nl": "Mail aan"
-		              }
-	              },
-	              {
-		              "name": "subject",
-		              "type": "text",
-		              "placeholder": {
-			              "en": "Subject",
-			              "nl": "Onderwerp"
-		              }
-	              },
-	              {
-		              "name": "body",
-		              "type": "text",
-		              "placeholder": {
-			              "en": "Content",
-			              "nl": "Inhoud"
-		              }
-	              }
-	        ]
+      },
+      {
+        "id": "sendascii",
+        "title": {
+          "en": "Send a text-only mail",
+          "nl": "Stuur een platte tekst e-mail"
         },
-        {
-            "id": "sendascii",
-            "title": {
-                "en": "Send a text-only mail",
-                "nl": "Stuur een platte tekst e-mail"
-            },
-            "args": [
-                {
-                  "name": "mailto",
-                  "type": "text",
-                  "placeholder": {
-                    "en": "Mail to",
-                    "nl": "Mail aan"
-                  }
-                },
-                {
-                  "name": "subject",
-                  "type": "text",
-                  "placeholder": {
-                    "en": "Subject",
-                    "nl": "Onderwerp"
-                  }
-                },
-                {
-                  "name": "body",
-                  "type": "text",
-                  "placeholder": {
-                    "en": "Content",
-                    "nl": "Inhoud"
-                  }
-                }
-          ]
+        "args": [
+          {
+            "name": "mailto",
+            "type": "text",
+            "placeholder": {
+              "en": "Mail to",
+              "nl": "Mail aan"
+            }
+          },
+          {
+            "name": "subject",
+            "type": "text",
+            "placeholder": {
+              "en": "Subject",
+              "nl": "Onderwerp"
+            }
+          },
+          {
+            "name": "body",
+            "type": "text",
+            "placeholder": {
+              "en": "Content",
+              "nl": "Inhoud"
+            }
+          }
+        ]
+      },
+      {
+        "id": "sendimage",
+        "title": {
+          "en": "Send image token",
+          "nl": "Stuur afbeelding token"
         },
-        {
-            "id": "sendimage",
-            "title": {
-                "en": "Send image token",
-                "nl": "Stuur afbeelding token"
-            },
-            "droptoken": "image",
-            "args": [
-	              {
-		              "name": "mailto",
-		              "type": "text",
-		              "placeholder": {
-			              "en": "Mail to",
-			              "nl": "Mail aan"
-		              }
-	              },
-	              {
-		              "name": "subject",
-		              "type": "text",
-		              "placeholder": {
-			              "en": "Subject",
-			              "nl": "Onderwerp"
-		              }
-	              }
-	        ]
-        }
-       ]
-    }
+        "droptoken": "image",
+        "args": [
+          {
+            "name": "mailto",
+            "type": "text",
+            "placeholder": {
+              "en": "Mail to",
+              "nl": "Mail aan"
+            }
+          },
+          {
+            "name": "subject",
+            "type": "text",
+            "placeholder": {
+              "en": "Subject",
+              "nl": "Onderwerp"
+            }
+          }
+        ]
+      },
+      {
+        "id": "sendimagelink",
+        "title": {
+          "en": "Send image from link"
+        },
+        "args": [
+          {
+            "name": "mailto",
+            "type": "text",
+            "placeholder": {
+              "en": "Mail to",
+              "nl": "Mail aan"
+            }
+          },
+          {
+            "name": "subject",
+            "type": "text",
+            "placeholder": {
+              "en": "Subject",
+              "nl": "Onderwerp"
+            }
+          },
+          {
+            "name": "link",
+            "type": "text",
+            "placeholder": {
+              "en": "Link"
+            }
+          }
+        ]
+      }
+    ]
+  }
 }

@@ -28,6 +28,10 @@ class EmailApp extends Homey.App {
         new Homey.FlowCardAction('sendimage')
             .register()
             .registerRunListener(args => this.doSendImageEmail(args));
+
+        new Homey.FlowCardAction('sendimagelink')
+            .register()
+            .registerRunListener(args => this.doSendImageLinkEmail(args));
     }
 
     getEmailSettings() {
@@ -133,6 +137,32 @@ class EmailApp extends Homey.App {
             transporter.sendMail(mailOptions, (error, info) => {
                 if (error) {
                     this.log('doSendImageEmail error', error);
+                    reject(error);
+                } else {
+                    this.log('Message sent: ' + info.response);
+                    resolve();
+                }
+            });
+        });
+    }
+
+    async doSendImageLinkEmail(args) {
+        const settings = this.getEmailSettings();
+
+        return new Promise((resolve, reject) => {
+
+            const attachments = [{
+                filename: 'attachment.jpg',
+                path: args.link,
+                contentType: 'image/jpeg'
+            }];
+
+            const transporter = this.createEmailTransporter(settings);
+            const mailOptions = this.createMailOptions(settings, args, false, attachments);
+            this.log('doSendImageLinkEmail', settings, mailOptions);
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    this.log('doSendImageLinkEmail error', error);
                     reject(error);
                 } else {
                     this.log('Message sent: ' + info.response);
